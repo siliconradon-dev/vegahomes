@@ -1,0 +1,80 @@
+<?php
+
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\InquiryController;
+use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\Admin\PackageController;
+use App\Http\Controllers\Admin\SubscriberController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\EstimateController;
+use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\PageController;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Public website
+|--------------------------------------------------------------------------
+*/
+Route::get('/', [PageController::class, 'home'])->name('home');
+Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/services', [PageController::class, 'services'])->name('services');
+Route::get('/projects', [PageController::class, 'projects'])->name('projects');
+Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+
+Route::post('/contact', [ContactController::class, 'store'])
+    ->middleware('throttle:6,1')
+    ->name('contact.store');
+
+Route::post('/newsletter', [NewsletterController::class, 'store'])
+    ->middleware('throttle:6,1')
+    ->name('newsletter.store');
+
+// Dream Home estimator (package popup) - submits enquiry to the admin panel
+Route::post('/estimate', [EstimateController::class, 'store'])
+    ->middleware('throttle:8,1')
+    ->name('estimate.store');
+
+/*
+|--------------------------------------------------------------------------
+| Admin panel
+|--------------------------------------------------------------------------
+*/
+// Named "login" because the Authenticate middleware redirects guests to route('login').
+Route::get('/admin/login', [AuthController::class, 'showLogin'])->middleware('guest')->name('login');
+Route::post('/admin/login', [AuthController::class, 'login'])->middleware(['guest', 'throttle:10,1'])->name('login.attempt');
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    Route::get('/inquiries', [InquiryController::class, 'index'])->name('inquiries.index');
+    Route::get('/inquiries/export', [InquiryController::class, 'export'])->name('inquiries.export');
+    Route::get('/inquiries/{inquiry}', [InquiryController::class, 'show'])->name('inquiries.show');
+    Route::patch('/inquiries/{inquiry}', [InquiryController::class, 'update'])->name('inquiries.update');
+    Route::delete('/inquiries/{inquiry}', [InquiryController::class, 'destroy'])->name('inquiries.destroy');
+    Route::get('/inquiries/{inquiry}/attachments/{attachment}', [InquiryController::class, 'attachment'])->name('inquiries.attachment');
+
+    Route::resource('packages', PackageController::class)->except('show');
+
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::patch('/messages/{message}', [MessageController::class, 'toggle'])->name('messages.toggle');
+    Route::delete('/messages/{message}', [MessageController::class, 'destroy'])->name('messages.destroy');
+
+    Route::get('/subscribers', [SubscriberController::class, 'index'])->name('subscribers.index');
+    Route::delete('/subscribers/{subscriber}', [SubscriberController::class, 'destroy'])->name('subscribers.destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Old static-site URLs -> new routes (keeps Google rankings / old links alive)
+|--------------------------------------------------------------------------
+*/
+Route::redirect('/index.html', '/', 301);
+Route::redirect('/about.html', '/about', 301);
+Route::redirect('/Services.html', '/services', 301);
+Route::redirect('/services.html', '/services', 301);
+Route::redirect('/projects.html', '/projects', 301);
+Route::redirect('/ContactUs.html', '/contact', 301);
+Route::redirect('/contactus.html', '/contact', 301);
