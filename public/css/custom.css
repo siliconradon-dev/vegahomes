@@ -4881,8 +4881,27 @@ header.main-header .header-sticky.active .navbar{
 	padding-bottom: 30px;
 }
 
-.footer-logo, .navbar-brand img{
-	width: 100px !important;
+.navbar-brand img{
+	width: 150px !important;
+	height: auto;
+	max-width: none;
+	display: block;
+}
+
+.footer-logo{
+	width: 200px !important;
+	max-width: 100%;
+}
+
+.footer-logo img{
+	width: 100%;
+	height: auto;
+}
+
+@media only screen and (max-width: 767px){
+	.navbar-brand img{
+		width: 118px !important;
+	}
 }
 
 /*messenger float btn*/

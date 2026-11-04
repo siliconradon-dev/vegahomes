@@ -5,7 +5,7 @@
                 <div class="navbar navbar-expand-lg">
                     <!-- Logo Start -->
                     <a class="navbar-brand" href="{{ route('home') }}">
-                        <img src="{{ asset('images/downloads/logo.png') }}" alt="Logo">
+                        <img src="{{ asset('images/downloads/logo-full.png') }}" alt="Vega Homes - We Bring Your Dream Space to Life">
                     </a>
                     <!-- Logo End -->
 

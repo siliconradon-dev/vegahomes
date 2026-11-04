@@ -9,7 +9,7 @@
                             <div class="col-md-6">
                                 <!-- Footer Logo Start -->
                                 <div class="footer-logo">
-                                    <img src="{{ asset('images/downloads/logo.png') }}" alt="">
+                                    <img src="{{ asset('images/downloads/logo-full.png') }}" alt="Vega Homes - We Bring Your Dream Space to Life">
                                 </div>
                                 <!-- Footer Logo End -->
                             </div>
