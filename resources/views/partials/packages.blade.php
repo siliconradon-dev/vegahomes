@@ -17,7 +17,7 @@
 
 @if ($vegaPackages->count())
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/packages.css') }}?v=1">
+    <link rel="stylesheet" href="{{ asset('css/packages.css') }}?v=2">
 @endpush
 
 <section class="vh-pk" id="packages">
@@ -25,13 +25,21 @@
     <div class="vh-pk__glow vh-pk__glow--b"></div>
 
     <div class="container position-relative">
-        <div class="vh-pk__head">
-            <span class="vh-pk__eyebrow">our packages</span>
-            <h2 class="vh-pk__title">Choose the package that<br><em>fits your dream home</em></h2>
-            <p class="vh-pk__lead">
-                Pick a construction package, enter your room sizes and get an indicative cost in minutes.
-                Our team will then contact you with a detailed quotation.
-            </p>
+        <div class="row section-row align-items-center">
+            <div class="col-lg-6">
+                <div class="section-title dark-section">
+                    <h3 class="wow fadeInUp">our packages</h3>
+                    <h2 class="text-anime-style-2" data-cursor="-opaque">Choose the package that fits your <span>dream home</span></h2>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="section-title-content dark-section">
+                    <p class="wow fadeInUp" data-wow-delay="0.2s">
+                        Pick a construction package, enter your room sizes and get an indicative cost in minutes.
+                        Our team will then contact you with a detailed quotation.
+                    </p>
+                </div>
+            </div>
         </div>
 
         <div class="row g-4 justify-content-center">
@@ -274,9 +282,19 @@
 
                 {{-- STEP: review --}}
                 <section class="vh-step" data-step="review">
-                    <p class="vh-hint">Please check everything below, then submit your enquiry.</p>
+                    <div class="vh-print-head">
+                        <img src="{{ asset('images/downloads/logo.png') }}" alt="Vega Homes">
+                        <div>
+                            <b>House Construction Enquiry</b>
+                            <span>Ref: <span data-bind="printRef">Draft</span> · <span data-bind="printDate"></span></span>
+                        </div>
+                    </div>
+                    <p class="vh-hint vh-noprint">Please check everything below, then submit your enquiry.</p>
                     <div class="vh-review" id="vhReview"></div>
                     <p class="vh-notice">Your enquiry is not a final quotation. Final pricing depends on the approved design, specifications, site conditions and confirmed project scope.</p>
+                    <button type="button" class="vh-btn vh-btn--ghost vh-noprint vh-print-btn" data-vh-print>
+                        <i class="fa-solid fa-print"></i> Print / Save PDF
+                    </button>
                 </section>
 
                 {{-- SUCCESS --}}
@@ -289,6 +307,7 @@
                     <a class="vh-btn vh-btn--wa" id="vhWhatsapp" href="#" target="_blank" rel="noopener">
                         <i class="fa-brands fa-whatsapp"></i> Send on WhatsApp
                     </a>
+                    <button type="button" class="vh-btn vh-btn--ghost" data-vh-print><i class="fa-solid fa-print"></i> Print / Save PDF</button>
                     <button type="button" class="vh-btn vh-btn--ghost" data-vh-close>Close</button>
                 </section>
 

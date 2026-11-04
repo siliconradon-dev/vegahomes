@@ -144,6 +144,7 @@
     <!-- Our Services Section End -->
 
     @include('partials.packages')
+    @include('partials.design-packages')
 
     <!-- Why Choose Us Section Start -->
     <div class="why-choose-us">

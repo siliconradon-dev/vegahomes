@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DesignPackage;
 use App\Models\Package;
 
 class PageController extends Controller
 {
     public function home()
     {
-        return view('pages.home', ['packages' => $this->packages()]);
+        return view('pages.home', ['packages' => $this->packages(), 'designPackages' => DesignPackage::active()->get()]);
     }
 
     public function about()
@@ -18,7 +19,7 @@ class PageController extends Controller
 
     public function services()
     {
-        return view('pages.services', ['packages' => $this->packages()]);
+        return view('pages.services', ['packages' => $this->packages(), 'designPackages' => DesignPackage::active()->get()]);
     }
 
     public function projects()

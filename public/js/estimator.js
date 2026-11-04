@@ -34,7 +34,7 @@
     var MAX_FILES = 8;
     var MAX_TOTAL = 20 * 1024 * 1024;
 
-    var state = { pkg: null, steps: [], index: 0, busy: false, done: false, files: [] };
+    var state = { pkg: null, steps: [], index: 0, busy: false, done: false, files: [], ref: '' };
 
     /* ---------------- helpers ---------------- */
     function q(sel, ctx) { return (ctx || root).querySelector(sel); }
@@ -453,6 +453,7 @@
 
     function success(json, p, t) {
         state.done = true;
+        state.ref = json.reference;
         qa('.vh-step', form).forEach(function (s) { s.classList.toggle('is-active', s.getAttribute('data-step') === 'success'); });
         q('#vhFoot').hidden = true;
         bind('stepCount', 'Done');
@@ -464,6 +465,25 @@
         wa.href = json.whatsapp_url;
         form.scrollTop = 0;
         try { window.open(json.whatsapp_url, '_blank', 'noopener'); } catch (e) { /* popup blocked - button remains */ }
+    }
+
+    /* ---------------- print / save PDF ---------------- */
+    function printSummary() {
+        var review = q('.vh-step[data-step="review"]', form);
+        buildReview();
+        bind('printRef', state.ref || 'Draft \u2013 not yet submitted');
+        bind('printDate', new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }));
+
+        var html = document.documentElement;
+        function cleanup() {
+            window.removeEventListener('afterprint', cleanup);
+            html.classList.remove('vh-printing');
+            review.classList.remove('is-printing');
+        }
+        window.addEventListener('afterprint', cleanup);
+        html.classList.add('vh-printing');
+        review.classList.add('is-printing');
+        setTimeout(function () { window.print(); }, 60);
     }
 
     /* ---------------- navigation ---------------- */
@@ -504,6 +524,7 @@
         qa('.is-invalid', form).forEach(function (i) { i.classList.remove('is-invalid'); });
         state.files = [];
         state.done = false;
+        state.ref = '';
         state.index = 0;
         renderFiles();
         seed();
@@ -536,6 +557,8 @@
     document.addEventListener('click', function (e) {
         var t = e.target.closest ? e.target.closest('[data-vh-open]') : null;
         if (t) { e.preventDefault(); opener = t; open(t.getAttribute('data-vh-open')); return; }
+        var pr = e.target.closest ? e.target.closest('[data-vh-print]') : null;
+        if (pr && root.contains(pr)) { e.preventDefault(); printSummary(); return; }
         var c = e.target.closest ? e.target.closest('[data-vh-close]') : null;
         if (c && root.contains(c)) { e.preventDefault(); close(); }
     });

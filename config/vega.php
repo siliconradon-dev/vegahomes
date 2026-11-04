@@ -53,4 +53,23 @@ return [
         'won'        => 'Won',
         'lost'       => 'Lost',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Architectural Design Fee Calculator
+    |--------------------------------------------------------------------------
+    */
+    'design_house_types' => ['Single-Storey', 'Two-Storey', 'Three-Storey', 'Other / Not decided'],
+
+    // slug => [title, description]   (optional add-on services, priced separately)
+    'design_addons' => [
+        'interior-design'         => ['Interior Design', 'Interior concepts, layouts and finishes.'],
+        'swimming-pool-design'    => ['Swimming Pool Design', 'Pool planning and design coordination.'],
+        'landscape-design'        => ['Landscape Design', 'Garden and outdoor space concepts.'],
+        'boundary-wall-gate'      => ['Boundary Wall & Gate', 'Boundary wall and entrance gate design.'],
+        'boq-preparation'         => ['BOQ Preparation', 'Bill of quantities for cost planning.'],
+        'quantity-surveying'      => ['Quantity Surveying', 'Measurement and cost consulting services.'],
+        'construction-supervision' => ['Construction Supervision', 'Site progress and quality oversight.'],
+        'project-management'      => ['Project Management', 'Coordination of project activities and milestones.'],
+    ],
 ];

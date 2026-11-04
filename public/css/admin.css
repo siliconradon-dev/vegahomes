@@ -67,6 +67,8 @@
 
 /* ---------- Stats ---------- */
 .adm-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.adm-stats--design { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.adm-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .adm-stat { position: relative; display: block; padding: 22px; border-radius: 20px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); overflow: hidden; color: inherit; transition: transform .25s; }
 a.adm-stat:hover { transform: translateY(-3px); }
 .adm-stat i { position: absolute; right: 18px; top: 18px; width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; font-size: 17px; color: var(--navy); background: #eaf1f8; }

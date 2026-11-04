@@ -2,11 +2,14 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DesignInquiryController;
+use App\Http\Controllers\Admin\DesignPackageController;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\SubscriberController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DesignEstimateController;
 use App\Http\Controllers\EstimateController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PageController;
@@ -36,6 +39,11 @@ Route::post('/estimate', [EstimateController::class, 'store'])
     ->middleware('throttle:8,1')
     ->name('estimate.store');
 
+// Architectural design-fee estimator (design package popup)
+Route::post('/design-estimate', [DesignEstimateController::class, 'store'])
+    ->middleware('throttle:8,1')
+    ->name('design-estimate.store');
+
 /*
 |--------------------------------------------------------------------------
 | Admin panel
@@ -57,6 +65,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/inquiries/{inquiry}/attachments/{attachment}', [InquiryController::class, 'attachment'])->name('inquiries.attachment');
 
     Route::resource('packages', PackageController::class)->except('show');
+
+    Route::get('/design-inquiries', [DesignInquiryController::class, 'index'])->name('design-inquiries.index');
+    Route::get('/design-inquiries/export', [DesignInquiryController::class, 'export'])->name('design-inquiries.export');
+    Route::get('/design-inquiries/{inquiry}', [DesignInquiryController::class, 'show'])->name('design-inquiries.show');
+    Route::patch('/design-inquiries/{inquiry}', [DesignInquiryController::class, 'update'])->name('design-inquiries.update');
+    Route::delete('/design-inquiries/{inquiry}', [DesignInquiryController::class, 'destroy'])->name('design-inquiries.destroy');
+
+    Route::resource('design-packages', DesignPackageController::class)
+        ->parameters(['design-packages' => 'designPackage'])
+        ->except('show');
 
     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
     Route::patch('/messages/{message}', [MessageController::class, 'toggle'])->name('messages.toggle');

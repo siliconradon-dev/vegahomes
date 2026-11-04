@@ -294,3 +294,27 @@ textarea.vh-in { resize: vertical; min-height: 88px; }
 @media (prefers-reduced-motion: reduce) {
     .vh-modal *, .vh-card { animation: none !important; transition: none !important; }
 }
+
+/* ---------- Print / Save PDF ---------- */
+.vh-print-head { display: none; }
+.vh-print-btn { margin-top: 16px; }
+@media print {
+    @page { size: A4; margin: 14mm; }
+    html.vh-printing, html.vh-printing body { overflow: visible !important; height: auto !important; background: #fff !important; }
+    html.vh-printing body > *:not(.vh-modal) { display: none !important; }
+    html.vh-printing .vh-modal { position: static; display: block; padding: 0; }
+    html.vh-printing .vh-modal__backdrop, html.vh-printing .vh-aside, html.vh-printing .vh-head,
+    html.vh-printing .vh-bar, html.vh-printing .vh-foot, html.vh-printing .vh-noprint,
+    html.vh-printing .vh-error, html.vh-printing .vh-hp { display: none !important; }
+    html.vh-printing .vh-dialog { display: block; height: auto; max-width: none; box-shadow: none; border-radius: 0; animation: none; }
+    html.vh-printing .vh-main, html.vh-printing .vh-body { display: block; overflow: visible; height: auto; padding: 0; }
+    html.vh-printing .vh-step { display: none !important; }
+    html.vh-printing .vh-step.is-printing, html.vh-printing .vh-step[data-step="review"].is-active { display: block !important; animation: none; }
+    html.vh-printing .vh-print-head { display: flex; align-items: center; gap: 18px; padding: 0 0 14px; margin-bottom: 16px; border-bottom: 3px solid #c9a24b; }
+    html.vh-printing .vh-print-head img { height: 54px; width: auto; background: #00294a; padding: 8px 12px; border-radius: 8px; }
+    html.vh-printing .vh-print-head b { display: block; font-size: 20px; color: #00294a; }
+    html.vh-printing .vh-print-head span { font-size: 12px; color: #555; }
+    html.vh-printing .vh-review { gap: 6px; }
+    html.vh-printing .vh-review > div { break-inside: avoid; }
+    html.vh-printing .vh-review .is-total, html.vh-printing .vh-notice { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

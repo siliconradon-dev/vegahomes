@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\ContactMessage;
+use App\Models\DesignInquiry;
 use App\Models\EstimateInquiry;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
@@ -27,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer('admin.layouts.app', function ($view) {
             $view->with('navCounts', [
                 'inquiries' => Schema::hasTable('estimate_inquiries') ? EstimateInquiry::where('status', 'new')->count() : 0,
+                'design'    => Schema::hasTable('design_inquiries') ? DesignInquiry::where('status', 'new')->count() : 0,
                 'messages'  => Schema::hasTable('contact_messages') ? ContactMessage::where('is_read', false)->count() : 0,
             ]);
         });

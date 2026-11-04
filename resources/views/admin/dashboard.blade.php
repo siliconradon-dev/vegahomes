@@ -37,6 +37,21 @@
         </div>
     </div>
 
+    <div class="adm-stats adm-stats--design">
+        <a class="adm-stat" href="{{ route('admin.design-inquiries.index', ['status' => 'new']) }}">
+            <i class="fa-solid fa-compass-drafting"></i>
+            <span>New design enquiries</span>
+            <strong>{{ $stats['design_new'] }}</strong>
+            <small>{{ $stats['design_total'] }} design enquiries in total</small>
+        </a>
+        <div class="adm-stat">
+            <i class="fa-solid fa-pen-ruler"></i>
+            <span>Open design-fee pipeline</span>
+            <strong class="is-money">LKR {{ number_format($stats['design_fees']) }}</strong>
+            <small>indicative design fees, not yet won/lost</small>
+        </div>
+    </div>
+
     <div class="adm-grid-3">
         <section class="adm-card">
             <div class="adm-card__head"><h2>Enquiries – last 6 months</h2></div>
@@ -84,5 +99,12 @@
             <a class="adm-link" href="{{ route('admin.inquiries.index') }}">View all →</a>
         </div>
         @include('admin.inquiries._table', ['inquiries' => $recent, 'compact' => true])
+    </section>
+    <section class="adm-card">
+        <div class="adm-card__head">
+            <h2>Latest design enquiries</h2>
+            <a class="adm-link" href="{{ route('admin.design-inquiries.index') }}">View all →</a>
+        </div>
+        @include('admin.design-inquiries._table', ['inquiries' => $recentDesign])
     </section>
 @endsection

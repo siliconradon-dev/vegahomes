@@ -947,6 +947,8 @@
     </div>
     <!-- How We Work End -->
 
+    @include('partials.design-packages')
+
     <!-- Our Skill Start -->
     <div class="our-skill">
         <div class="container">

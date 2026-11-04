@@ -27,11 +27,18 @@
                     <i class="fa-solid fa-gauge-high"></i> Dashboard
                 </a>
                 <a href="{{ route('admin.inquiries.index') }}" class="{{ request()->routeIs('admin.inquiries.*') ? 'is-active' : '' }}">
-                    <i class="fa-solid fa-calculator"></i> Estimate enquiries
+                    <i class="fa-solid fa-calculator"></i> Build enquiries
                     @if (($navCounts['inquiries'] ?? 0) > 0)<em>{{ $navCounts['inquiries'] }}</em>@endif
                 </a>
                 <a href="{{ route('admin.packages.index') }}" class="{{ request()->routeIs('admin.packages.*') ? 'is-active' : '' }}">
-                    <i class="fa-solid fa-gem"></i> Packages &amp; rates
+                    <i class="fa-solid fa-gem"></i> Build packages
+                </a>
+                <a href="{{ route('admin.design-inquiries.index') }}" class="{{ request()->routeIs('admin.design-inquiries.*') ? 'is-active' : '' }}">
+                    <i class="fa-solid fa-compass-drafting"></i> Design enquiries
+                    @if (($navCounts['design'] ?? 0) > 0)<em>{{ $navCounts['design'] }}</em>@endif
+                </a>
+                <a href="{{ route('admin.design-packages.index') }}" class="{{ request()->routeIs('admin.design-packages.*') ? 'is-active' : '' }}">
+                    <i class="fa-solid fa-pen-ruler"></i> Design packages
                 </a>
                 <a href="{{ route('admin.messages.index') }}" class="{{ request()->routeIs('admin.messages.*') ? 'is-active' : '' }}">
                     <i class="fa-solid fa-envelope"></i> Contact messages
