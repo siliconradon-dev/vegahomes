@@ -40,6 +40,9 @@
                 <a href="{{ route('admin.design-packages.index') }}" class="{{ request()->routeIs('admin.design-packages.*') ? 'is-active' : '' }}">
                     <i class="fa-solid fa-pen-ruler"></i> Design packages
                 </a>
+                <a href="{{ route('admin.projects.index') }}" class="{{ request()->routeIs('admin.projects.*') ? 'is-active' : '' }}">
+                    <i class="fa-solid fa-city"></i> Projects
+                </a>
                 <a href="{{ route('admin.messages.index') }}" class="{{ request()->routeIs('admin.messages.*') ? 'is-active' : '' }}">
                     <i class="fa-solid fa-envelope"></i> Contact messages
                     @if (($navCounts['messages'] ?? 0) > 0)<em>{{ $navCounts['messages'] }}</em>@endif

@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DesignPackageController;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\PackageController;
+use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\SubscriberController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DesignEstimateController;
@@ -107,6 +108,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::resource('design-packages', DesignPackageController::class)
         ->parameters(['design-packages' => 'designPackage'])
         ->except('show');
+
+    Route::resource('projects', ProjectController::class)->except('show');
+    Route::patch('/projects/{project}/status', [ProjectController::class, 'status'])->name('projects.status');
 
     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
     Route::patch('/messages/{message}', [MessageController::class, 'toggle'])->name('messages.toggle');

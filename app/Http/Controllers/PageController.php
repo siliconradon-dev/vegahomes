@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DesignPackage;
 use App\Models\Package;
+use App\Models\Project;
 
 class PageController extends Controller
 {
@@ -24,7 +25,9 @@ class PageController extends Controller
 
     public function projects()
     {
-        return view('pages.projects');
+        return view('pages.projects', [
+            'projects' => Project::published()->ordered()->get(),
+        ]);
     }
 
     public function contact()
