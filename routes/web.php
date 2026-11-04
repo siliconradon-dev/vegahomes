@@ -13,6 +13,7 @@ use App\Http\Controllers\DesignEstimateController;
 use App\Http\Controllers\EstimateController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PageController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,6 +44,44 @@ Route::post('/estimate', [EstimateController::class, 'store'])
 Route::post('/design-estimate', [DesignEstimateController::class, 'store'])
     ->middleware('throttle:8,1')
     ->name('design-estimate.store');
+
+/*
+|--------------------------------------------------------------------------
+| TEMPORARY: Run migrations on server (no SSH access)
+|--------------------------------------------------------------------------
+| Usage:  https://yourdomain.com/run-migrations/YOUR_DEPLOY_TOKEN
+| Optional: add ?seed=1 to run seeders, ?link=1 to create the storage link.
+| !!! DELETE THIS BLOCK once deployment is finished !!!
+*/
+Route::get('/run-migrations/{token}', function (string $token) {
+    $secret = (string) config('app.deploy_token');
+
+    // 404 if token is not configured or does not match (hides that the route exists)
+    if ($secret === '' || ! hash_equals($secret, $token)) {
+        abort(404);
+    }
+
+    $output = [];
+
+    Artisan::call('migrate', ['--force' => true]);
+    $output[] = "== migrate ==\n" . Artisan::output();
+
+    if (request()->boolean('seed')) {
+        Artisan::call('db:seed', ['--force' => true]);
+        $output[] = "== db:seed ==\n" . Artisan::output();
+    }
+
+    if (request()->boolean('link')) {
+        Artisan::call('storage:link');
+        $output[] = "== storage:link ==\n" . Artisan::output();
+    }
+
+    Artisan::call('optimize:clear');
+    $output[] = "== optimize:clear ==\n" . Artisan::output();
+
+    return response(implode("\n", $output), 200)
+        ->header('Content-Type', 'text/plain');
+})->middleware('throttle:3,1')->name('deploy.migrate');
 
 /*
 |--------------------------------------------------------------------------
