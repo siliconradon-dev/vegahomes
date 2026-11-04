@@ -49,18 +49,11 @@ Route::post('/design-estimate', [DesignEstimateController::class, 'store'])
 |--------------------------------------------------------------------------
 | TEMPORARY: Run migrations on server (no SSH access)
 |--------------------------------------------------------------------------
-| Usage:  https://yourdomain.com/run-migrations/YOUR_DEPLOY_TOKEN
-| Optional: add ?seed=1 to run seeders, ?link=1 to create the storage link.
-| !!! DELETE THIS BLOCK once deployment is finished !!!
+| Usage:  https://vegahomes.lk/run-migrations
+| Optional: ?seed=1 to run seeders, ?link=1 to create the storage link.
+| !!! DELETE THIS BLOCK right after running it !!!
 */
-Route::get('/run-migrations/{token}', function (string $token) {
-    $secret = (string) config('app.deploy_token');
-
-    // 404 if token is not configured or does not match (hides that the route exists)
-    if ($secret === '' || ! hash_equals($secret, $token)) {
-        abort(404);
-    }
-
+Route::get('/run-migrations', function () {
     $output = [];
 
     Artisan::call('migrate', ['--force' => true]);
@@ -81,7 +74,7 @@ Route::get('/run-migrations/{token}', function (string $token) {
 
     return response(implode("\n", $output), 200)
         ->header('Content-Type', 'text/plain');
-})->middleware('throttle:3,1')->name('deploy.migrate');
+})->middleware('throttle:3,1');
 
 /*
 |--------------------------------------------------------------------------
