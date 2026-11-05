@@ -72,4 +72,18 @@ return [
         'construction-supervision' => ['Construction Supervision', 'Site progress and quality oversight.'],
         'project-management'      => ['Project Management', 'Coordination of project activities and milestones.'],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Public estimates (rates are never sent to the browser)
+    |--------------------------------------------------------------------------
+    | VEGA_SHOW_ESTIMATES=false  -> visitors see no price at all; they only send the enquiry.
+    | Otherwise they see an approximate range (exact figures stay in the admin panel).
+    */
+    // true  = package rates + exact estimates are shown on the website (default).
+    // false = rates are never sent to the browser; visitors only see an approximate range.
+    'public_rates'         => (bool) env('VEGA_PUBLIC_RATES', true),
+    'show_estimates'       => (bool) env('VEGA_SHOW_ESTIMATES', true),
+    'estimate_range_low'   => (float) env('VEGA_RANGE_LOW', 0.88),
+    'estimate_range_high'  => (float) env('VEGA_RANGE_HIGH', 1.17),
 ];

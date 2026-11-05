@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\EstimateRange;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -33,6 +34,11 @@ class DesignInquiry extends Model
     public function getFeeLabelAttribute(): string
     {
         return 'LKR ' . number_format($this->design_fee);
+    }
+
+    public function getFeeRangeLabelAttribute(): ?string
+    {
+        return EstimateRange::label((int) $this->design_fee);
     }
 
     public function getAreaLabelAttribute(): string
@@ -80,16 +86,27 @@ class DesignInquiry extends Model
 
     public function whatsappMessage(): string
     {
+        $rates = (bool) config('vega.public_rates');
+
         $lines = [
             '*New Architectural Design Enquiry*',
             "Ref: {$this->reference}",
             '',
             "*Package:* {$this->package_name}",
-            "*Calculation:* {$this->calculation_basis}",
-            "*Design fee (indicative):* {$this->fee_label}",
-            "*Floor area:* {$this->area_label} ({$this->house_type})",
-            '*Construction estimate:* LKR ' . number_format($this->construction_estimate),
         ];
+
+        if ($rates) {
+            $lines[] = "*Calculation:* {$this->calculation_basis}";
+            $lines[] = "*Design fee (indicative):* {$this->fee_label}";
+        } elseif ($this->fee_range_label) {
+            $lines[] = "*Design fee range:* {$this->fee_range_label}";
+        }
+
+        $lines[] = "*Floor area:* {$this->area_label} ({$this->house_type})";
+
+        if ($rates) {
+            $lines[] = '*Construction estimate:* LKR ' . number_format($this->construction_estimate);
+        }
 
         if ($this->district) {
             $lines[] = "*District:* {$this->district}";

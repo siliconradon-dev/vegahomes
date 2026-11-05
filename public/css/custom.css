@@ -5005,3 +5005,87 @@ header.main-header .header-sticky.active .navbar{
 .project-item-box{
 	cursor: pointer;
 }
+
+
+/* ---------- Package links: navbar + hero pills ---------- */
+@media only screen and (max-width: 1399px) and (min-width: 992px){
+	.main-menu ul li{ margin: 0 2px; }
+	.main-menu ul li a{ padding: 15px 9px !important; font-size: 15px; }
+}
+
+
+.hero-pill{
+	flex: 0 0 auto;
+	white-space: nowrap;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	padding: 13px 20px;
+	border: 1px solid rgba(255, 255, 255, .55);
+	border-radius: 50px;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 1.4em;
+	text-transform: capitalize;
+	color: var(--white-color);
+	background: rgba(255, 255, 255, .08);
+	backdrop-filter: blur(4px);
+	transition: all .3s ease-in-out;
+}
+
+.hero-pill i{
+	font-size: 15px;
+	color: #ecd08a;
+	transition: color .3s ease-in-out;
+}
+
+.hero-pill:hover,
+.hero-pill:focus{
+	color: #00294a;
+	background: #fff;
+	border-color: #fff;
+	transform: translateY(-2px);
+}
+
+.hero-pill:hover i,
+.hero-pill:focus i{
+	color: #a8832f;
+}
+
+
+/* paragraph on the left; the two buttons sit side by side in ONE row in front of it,
+   centred on the paragraph's middle line */
+.hero-lead{
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 24px 36px;
+}
+
+.hero-content .section-title .hero-lead p{
+	flex: 1 1 380px;
+	max-width: 600px;
+	width: auto;
+	margin: 0;
+}
+
+.hero-pills{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	gap: 12px;
+	flex: 0 0 auto;
+}
+
+/* wide screens: paragraph + both buttons on the same line */
+@media only screen and (min-width: 1200px){
+	.hero-lead{ flex-wrap: nowrap; }
+}
+
+/* small screens: buttons drop under the paragraph and stack */
+@media only screen and (max-width: 575px){
+	.hero-pills{ flex-direction: column; align-items: stretch; width: 100%; }
+	.hero-pill{ justify-content: center; padding: 12px 18px; }
+}

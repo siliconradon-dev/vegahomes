@@ -13,10 +13,9 @@ class DesignEstimateController extends Controller
 {
     public function store(Request $request): JsonResponse
     {
-        // Honeypot - real visitors never fill this hidden field.
-        if ($request->filled('website')) {
-            return response()->json(['ok' => true, 'reference' => 'VH-OK']);
-        }
+        // Hidden trap field: real visitors leave it empty. Browser auto-fill can fill it by mistake,
+        // so we never drop the enquiry - we only flag it for the admin.
+        $flagged = $request->filled('hp_extra');
 
         $data = $request->validate([
             'package'    => ['required', Rule::in(DesignPackage::active()->pluck('slug')->all())],
@@ -60,12 +59,13 @@ class DesignEstimateController extends Controller
             'comments'              => $data['comments'] ?? null,
             'status'                => 'new',
             'ip'                    => $request->ip(),
+            'admin_notes'           => $flagged ? 'Spam trap field was filled - please check this enquiry.' : null,
         ]);
 
         return response()->json([
             'ok'           => true,
             'reference'    => $inquiry->reference,
-            'design_fee'   => $inquiry->fee_label,
+            'design_fee'   => config('vega.public_rates') ? $inquiry->fee_label : $inquiry->fee_range_label,
             'whatsapp_url' => $inquiry->whatsappUrl(),
         ]);
     }

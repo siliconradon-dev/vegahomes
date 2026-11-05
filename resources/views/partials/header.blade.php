@@ -25,6 +25,8 @@
                             <li class="nav-item {{ request()->routeIs('about') ? 'active' : '' }}"><a class="nav-link" href="{{ route('about') }}">About Us</a>
                             <li class="nav-item {{ request()->routeIs('services') ? 'active' : '' }}"><a class="nav-link" href="{{ route('services') }}">Services</a></li>
                             <li class="nav-item {{ request()->routeIs('projects') ? 'active' : '' }}"><a class="nav-link" href="{{ route('projects') }}">Projects</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#design-packages" data-pkg-link="#design-packages">Design Packages</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#packages" data-pkg-link="#packages">Construction Packages</a></li>
                             <li class="nav-item {{ request()->routeIs('contact') ? 'active' : '' }}"><a class="nav-link" href="{{ route('contact') }}">Contact Us</a></li>
                         </ul>
                     </div>
@@ -63,6 +65,8 @@
                 <li class="nav-item {{ request()->routeIs('about') ? 'active' : '' }}"><a class="nav-link text-center" href="{{ route('about') }}">About Us</a>
                 <li class="nav-item {{ request()->routeIs('services') ? 'active' : '' }}"><a class="nav-link text-center" href="{{ route('services') }}">Services</a></li>
                 <li class="nav-item {{ request()->routeIs('projects') ? 'active' : '' }}"><a class="nav-link text-center" href="{{ route('projects') }}">Projects</a></li>
+                <li class="nav-item"><a class="nav-link text-center" href="{{ route('home') }}#design-packages" data-pkg-link="#design-packages">Design Packages</a></li>
+                <li class="nav-item"><a class="nav-link text-center" href="{{ route('home') }}#packages" data-pkg-link="#packages">Construction Packages</a></li>
                 <li class="nav-item {{ request()->routeIs('contact') ? 'active' : '' }}"><a class="nav-link text-center" href="{{ route('contact') }}">Contact Us</a></li>
             </ul>
         </div>

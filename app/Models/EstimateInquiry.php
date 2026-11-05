@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\EstimateRange;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -53,6 +54,12 @@ class EstimateInquiry extends Model
         return ($this->is_starting_rate ? 'From ' : '') . 'LKR ' . number_format($this->estimated_cost);
     }
 
+    /** Rounded range shown to the public (null when estimates are switched off). */
+    public function getRangeLabelAttribute(): ?string
+    {
+        return EstimateRange::label((int) $this->estimated_cost);
+    }
+
     /** Client's phone converted to WhatsApp international format (Sri Lanka default). */
     public function getClientWhatsappNumberAttribute(): ?string
     {
@@ -86,17 +93,29 @@ class EstimateInquiry extends Model
     /** Pre-filled WhatsApp message sent from the visitor to the company number. */
     public function whatsappMessage(): string
     {
+        $rates = (bool) config('vega.public_rates');
+
         $lines = [
             "*New Home Estimate Enquiry*",
             "Ref: {$this->reference}",
             "",
-            "*Package:* {$this->package_name} (" . ($this->is_starting_rate ? 'from ' : '') . 'LKR ' . number_format($this->rate) . ' / sq.ft.)',
+            $rates
+                ? "*Package:* {$this->package_name} (" . ($this->is_starting_rate ? 'from ' : '') . 'LKR ' . number_format($this->rate) . ' / sq.ft.)'
+                : "*Package:* {$this->package_name}",
             "*House:* {$this->house_type}, " . rtrim(rtrim(number_format($this->total_area, 2), '0'), '.') . ' sq.ft.',
-            "*Estimate:* {$this->cost_label}",
+        ];
+
+        if ($rates) {
+            $lines[] = "*Estimate:* {$this->cost_label}";
+        } elseif ($this->range_label) {
+            $lines[] = "*Indicative range:* {$this->range_label}";
+        }
+
+        $lines = array_merge($lines, [
             "*Location:* {$this->town_area}, {$this->district}",
             "*Design:* {$this->design_status}",
             "*Plan approval:* {$this->approval_status}",
-        ];
+        ]);
 
         if ($this->start_date) {
             $lines[] = '*Start:* ' . $this->start_date->format('d M Y');

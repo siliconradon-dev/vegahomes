@@ -25,9 +25,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Our expertise lies in building smart, eco-friendly residences that seamlessly merge advanced innovations with exceptional construction quality, elevating your everyday comfort and lifestyle.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -53,9 +59,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Discover how our comprehensive strategies transform your property aspirations into reality through cutting-edge tech integration and outstanding workmanship that surpasses your expectations.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -81,9 +93,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Step into the future where intelligence meets sustainability. We specialize in creating residences that embrace modern innovations while maintaining the highest standards of design and durability.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -109,9 +127,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Experience the transformation of residential living through intelligent design and sustainable construction methods that prioritize both your comfort and environmental responsibility.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -137,9 +161,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Redefine your living standards with our innovative approach to home construction that seamlessly integrates technology with environmental consciousness and architectural excellence.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -165,9 +195,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Redefine your living standards with our innovative approach to home construction that seamlessly integrates technology with environmental consciousness and architectural excellence.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -193,9 +229,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Redefine your living standards with our innovative approach to home construction that seamlessly integrates technology with environmental consciousness and architectural excellence.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -221,9 +263,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Redefine your living standards with our innovative approach to home construction that seamlessly integrates technology with environmental consciousness and architectural excellence.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -249,9 +297,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Redefine your living standards with our innovative approach to home construction that seamlessly integrates technology with environmental consciousness and architectural excellence.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -277,9 +331,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Build your ideal residence with our comprehensive services that blend innovative technology, ecological awareness, and world-class construction expertise into every detail.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -305,9 +365,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Explore residences crafted with precision that incorporate state-of-the-art systems, energy conservation strategies, and uncompromising attention to quality throughout the building process.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -333,9 +399,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Envision your perfect home brought to life through our expertise in merging contemporary intelligence with sustainable practices and meticulous construction standards.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -361,9 +433,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Discover our holistic approach to residential development that prioritizes technological advancement, ecological sustainability, and exceptional craftsmanship at every stage of construction.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -389,9 +467,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Transform your residential aspirations into remarkable spaces with our integrated services combining technological intelligence, environmental responsibility, and outstanding construction expertise.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -417,9 +501,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Partner with us to create your ideal residence through forward-thinking design, environmental stewardship, and unwavering commitment to excellence in every construction endeavor.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -445,9 +535,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Realize the possibilities of intelligent residential spaces that harmoniously blend technological sophistication, energy consciousness, and superior architectural and construction standards.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -473,11 +569,17 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 We specialize in creating intelligent, energy-efficient homes that
                                                 combine cutting-edge technology with superior craftsmanship to enhance
                                                 your daily living experience.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -503,9 +605,15 @@
                                                 <br>
                                                 of Home Living
                                             </h1>
-                                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                            <div class="hero-lead">
+                                                <p class="wow fadeInUp" data-wow-delay="0.2s">
                                                 Construct tomorrow's residence today with our comprehensive portfolio of services featuring smart technology implementation, green building methodologies, and exceptional attention to craftsmanship quality.
                                             </p>
+                                                <div class="hero-pills wow fadeInUp" data-wow-delay="0.4s">
+                                                    <a href="{{ route('home') }}#design-packages" class="hero-pill" data-pkg-link="#design-packages"><i class="fa-solid fa-compass-drafting"></i> Design Packages</a>
+                                                    <a href="{{ route('home') }}#packages" class="hero-pill" data-pkg-link="#packages"><i class="fa-solid fa-helmet-safety"></i> Construction Packages</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

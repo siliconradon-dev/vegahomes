@@ -14,6 +14,7 @@ use App\Http\Controllers\DesignEstimateController;
 use App\Http\Controllers\EstimateController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\QuoteController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -40,11 +41,17 @@ Route::post('/newsletter', [NewsletterController::class, 'store'])
 Route::post('/estimate', [EstimateController::class, 'store'])
     ->middleware('throttle:8,1')
     ->name('estimate.store');
+Route::post('/estimate/quote', [QuoteController::class, 'construction'])
+    ->middleware('throttle:60,1')
+    ->name('estimate.quote');
 
 // Architectural design-fee estimator (design package popup)
 Route::post('/design-estimate', [DesignEstimateController::class, 'store'])
     ->middleware('throttle:8,1')
     ->name('design-estimate.store');
+Route::post('/design-estimate/quote', [QuoteController::class, 'design'])
+    ->middleware('throttle:60,1')
+    ->name('design-estimate.quote');
 
 /*
 |--------------------------------------------------------------------------

@@ -20,10 +20,9 @@ class EstimateController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        // Honeypot - real visitors never fill this hidden field.
-        if ($request->filled('website')) {
-            return response()->json(['ok' => true, 'reference' => 'VH-OK']);
-        }
+        // Hidden trap field: real visitors leave it empty. Browser auto-fill can fill it by mistake,
+        // so we never drop the enquiry - we only flag it for the admin.
+        $flagged = $request->filled('hp_extra');
 
         $data = $request->validate([
             'package'         => ['required', Rule::in(Package::active()->pluck('slug')->all())],
@@ -91,6 +90,7 @@ class EstimateController extends Controller
             'comments'         => $data['comments'] ?? null,
             'status'           => 'new',
             'ip'               => $request->ip(),
+            'admin_notes'      => $flagged ? 'Spam trap field was filled - please check this enquiry.' : null,
         ]);
 
         foreach (Arr::wrap($request->file('attachments', [])) as $file) {
@@ -116,7 +116,7 @@ class EstimateController extends Controller
             'ok'             => true,
             'reference'      => $inquiry->reference,
             'total_area'     => $inquiry->total_area,
-            'estimated_cost' => $inquiry->cost_label,
+            'estimated_cost' => config('vega.public_rates') ? $inquiry->cost_label : $inquiry->range_label,
             'whatsapp_url'   => $inquiry->whatsappUrl(),
         ]);
     }

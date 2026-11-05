@@ -7,18 +7,20 @@
         'boundary-wall-gate' => 'fa-archway', 'boq-preparation' => 'fa-clipboard-list', 'quantity-surveying' => 'fa-ruler-combined',
         'construction-supervision' => 'fa-helmet-safety', 'project-management' => 'fa-diagram-project',
     ];
+    $showRates = (bool) config('vega.public_rates');
     $vdConfig = [
-        'endpoint' => route('design-estimate.store'),
-        'packages' => $vdPackages->map(function ($p) {
-            return [
-                'slug'              => $p->slug,
-                'name'              => $p->name,
-                'type'              => $p->pricing_type,
-                'rate'              => $p->rate,
-                'construction_rate' => $p->construction_rate,
-                'tagline'           => $p->tagline,
-                'features'          => $p->features ?? [],
-            ];
+        'endpoint'      => route('design-estimate.store'),
+        'quoteEndpoint' => route('design-estimate.quote'),
+        'showEstimates' => \App\Support\EstimateRange::enabled(),
+        'publicRates'   => $showRates,
+        'packages'      => $vdPackages->map(function ($p) use ($showRates) {
+            $row = ['slug' => $p->slug, 'name' => $p->name, 'tagline' => $p->tagline, 'features' => $p->features ?? []];
+            if ($showRates) {
+                $row['type']              = $p->pricing_type;
+                $row['rate']              = $p->rate;
+                $row['construction_rate'] = $p->construction_rate;
+            }
+            return $row;
         })->values()->all(),
     ];
 @endphp
@@ -65,16 +67,23 @@
                         </header>
 
                         <div class="vd-card__body">
-                            <div class="vd-card__price">
-                                @if ($pkg->isPercent())
-                                    <strong>{{ $pkg->rate_plain }}%</strong>
-                                    <span>of construction estimate</span>
-                                @else
-                                    <small>LKR</small>
-                                    <strong>{{ number_format($pkg->rate, $pkg->rate == floor($pkg->rate) ? 0 : 2) }}</strong>
-                                    <span>/ sq.ft.</span>
-                                @endif
-                            </div>
+                            @if ($showRates)
+                                <div class="vd-card__price">
+                                    @if ($pkg->isPercent())
+                                        <strong>{{ $pkg->rate_plain }}%</strong>
+                                        <span>of construction estimate</span>
+                                    @else
+                                        <small>LKR</small>
+                                        <strong>{{ number_format($pkg->rate, $pkg->rate == floor($pkg->rate) ? 0 : 2) }}</strong>
+                                        <span>/ sq.ft.</span>
+                                    @endif
+                                </div>
+                            @else
+                                <div class="vd-card__tier">
+                                    <i class="fa-solid fa-calculator"></i>
+                                    <span>Instant design-fee estimate</span>
+                                </div>
+                            @endif
 
                             @if ($pkg->note)<p class="vd-card__note">{{ $pkg->note }}</p>@endif
 
@@ -192,7 +201,7 @@
             <div class="vh-bar"><span data-bind="bar"></span></div>
 
             <form class="vh-body" id="vdForm" novalidate autocomplete="on">
-                <div class="vh-hp" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
+                <div class="vh-hp" aria-hidden="true"><input type="text" name="hp_extra" tabindex="-1" autocomplete="off" data-lpignore="true" data-form-type="other"></div>
 
                 {{-- STEP 1 --}}
                 <section class="vh-step" data-step="details">
@@ -220,16 +229,19 @@
                             </select>
                         </label>
                         <div class="vh-field">
-                            <span>Estimated construction cost</span>
+                            <span>{{ $showRates ? 'Estimated construction cost' : 'Approx. construction cost' }}</span>
                             <div class="vd-readonly" data-bind="constEst">LKR 0</div>
-                            <small class="vd-help" data-bind="constNote">Calculated automatically from your floor area.</small>
+                            <small class="vd-help" data-bind="constNote">{{ $showRates ? 'Calculated automatically from your floor area.' : 'An approximate range based on your floor area.' }}</small>
                         </div>
                     </div>
 
-                    <div class="vh-notice" data-luxury-note hidden>
-                        This package is calculated as a percentage of the estimated total construction cost. If you do not have a construction estimate,
-                        contact Vega Homes for an assessment before relying on this figure.
-                    </div>
+
+                    @if ($showRates)
+                        <div class="vh-notice" data-luxury-note hidden>
+                            This package is calculated as a percentage of the estimated total construction cost. If you do not have a construction estimate,
+                            contact Vega Homes for an assessment before relying on this figure.
+                        </div>
+                    @endif
                 </section>
 
                 {{-- STEP 2 --}}
@@ -258,9 +270,11 @@
 
                     <div class="vh-sum">
                         <div><span>Selected package</span><b data-bind="pkgName">—</b></div>
-                        <div><span>Calculation basis</span><b data-bind="basis">—</b></div>
+                        @if ($showRates)
+                            <div><span>Calculation basis</span><b data-bind="basis">—</b></div>
+                        @endif
                         <div><span>Proposed floor area</span><b><span data-bind="area">0</span> sq.ft.</b></div>
-                        <div class="is-strong"><span>Estimated construction cost</span><b data-bind="constEst">LKR 0</b></div>
+                        <div class="is-strong"><span>{{ $showRates ? 'Estimated construction cost' : 'Approx. construction cost' }}</span><b data-bind="constEst">LKR 0</b></div>
                     </div>
 
                     <div class="vh-estimate">

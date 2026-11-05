@@ -188,19 +188,84 @@
         qa('[data-only-floor="second"]').forEach(function (n) { n.style.display = lv >= 3 ? '' : 'none'; });
 
         if (!p) {
-            bind('pkgName', '\u2014'); bind('pkgRate', '\u2014');
-            bind('totalCost', 'LKR 0'); bind('formula', 'Enter your room sizes to see the estimate.');
+            bind('pkgName', '\u2014'); bind('pkgRate', '');
+            setCost('LKR 0', 'Enter your room sizes to see the estimate.');
             return;
         }
 
-        var prefix = p.starting ? 'From ' : '';
-        var cost = t.total * p.rate;
         bind('pkgName', p.name);
-        bind('pkgRate', prefix + money(p.rate) + ' / sq.ft.');
-        bind('totalCost', t.total > 0 ? prefix + money(cost) : 'LKR 0');
-        bind('formula', t.total > 0
-            ? fmt(t.total) + ' sq.ft. \u00d7 ' + money(p.rate) + ' per sq.ft.' + (p.starting ? ' (starting estimate)' : '')
-            : 'Enter your room sizes to see the estimate.');
+
+        if (cfg.publicRates) {
+            // exact figures (rates are public)
+            var prefix = p.starting ? 'From ' : '';
+            bind('pkgRate', prefix + money(p.rate) + ' / sq.ft.');
+            bind('totalCost', t.total > 0 ? prefix + money(t.total * p.rate) : 'LKR 0');
+            bind('formula', t.total > 0
+                ? fmt(t.total) + ' sq.ft. \u00d7 ' + money(p.rate) + ' per sq.ft.' + (p.starting ? ' (starting estimate)' : '')
+                : 'Enter your room sizes to see the estimate.');
+            return;
+        }
+
+        // rates hidden: ask the server for an approximate range
+        bind('pkgRate', p.tagline || '');
+        scheduleQuote(t.total);
+    }
+
+    /* ---------------- approximate range (rates stay on the server) ---------------- */
+    var quote = { seq: 0, timer: null, key: '', text: '' };
+
+    function setCost(text, note) {
+        bind('totalCost', text);
+        bind('formula', note || '');
+    }
+
+    function rangeNote(area) {
+        var p = pkgObj();
+        return 'Approximate range for ' + fmt(area) + ' sq.ft. \u2013 ' + (p ? p.name + ' package.' : '');
+    }
+
+    function costText() {
+        if (!cfg.showEstimates) { return 'Detailed quotation from our team'; }
+        return quote.text || 'Calculating\u2026';
+    }
+
+    function scheduleQuote(area) {
+        var p = pkgObj();
+
+        if (!cfg.showEstimates) {
+            quote.text = '';
+            setCost('Quotation from our team', 'Your detailed quotation is prepared after our team reviews your plans.');
+            return;
+        }
+        if (!(area > 0) || !p) {
+            quote.text = ''; quote.key = '';
+            setCost('LKR 0', 'Enter your room sizes to see the estimate.');
+            return;
+        }
+
+        var key = p.slug + '|' + area;
+        if (quote.key === key && quote.text) { setCost(quote.text, rangeNote(area)); return; }
+
+        quote.key = key;
+        quote.text = '';
+        setCost('Calculating\u2026', rangeNote(area));
+        clearTimeout(quote.timer);
+        var seq = ++quote.seq;
+
+        quote.timer = setTimeout(function () {
+            fetch(cfg.quoteEndpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                body: JSON.stringify({ package: p.slug, area: area }),
+                credentials: 'same-origin'
+            }).then(function (r) { return r.json(); }).then(function (j) {
+                if (seq !== quote.seq) { return; }
+                if (j && j.ok && j.range) { quote.text = j.range; setCost(j.range, rangeNote(area)); }
+                else { setCost('Estimate unavailable', 'Please continue \u2013 our team will send your quotation.'); }
+            }).catch(function () {
+                if (seq === quote.seq) { setCost('Estimate unavailable', 'Please continue \u2013 our team will send your quotation.'); }
+            });
+        }, 450);
     }
 
     /* ---------------- package switch (estimate step) ---------------- */
@@ -214,7 +279,9 @@
             i.checked = p.slug === state.pkg;
             i.addEventListener('change', function () { state.pkg = p.slug; refresh(); });
             var s = el('span', '', p.name);
-            s.appendChild(el('small', '', (p.starting ? 'from ' : '') + Math.round(p.rate).toLocaleString('en-US') + '/sq.ft.'));
+            if (cfg.publicRates) {
+                s.appendChild(el('small', '', (p.starting ? 'from ' : '') + Math.round(p.rate).toLocaleString('en-US') + '/sq.ft.'));
+            }
             l.appendChild(i); l.appendChild(s);
             box.appendChild(l);
         });
@@ -332,7 +399,6 @@
         var p = pkgObj();
         var t = totals();
         var lv = levels();
-        var prefix = p && p.starting ? 'From ' : '';
 
         function item(label, value, cls) {
             var d = el('div', cls || '');
@@ -341,7 +407,8 @@
             box.appendChild(d);
         }
 
-        item('Package', p ? p.name + ' \u00b7 ' + prefix + money(p.rate) + ' / sq.ft.' : '\u2014');
+        var prefix = p && p.starting ? 'From ' : '';
+        item('Package', p ? (cfg.publicRates ? p.name + ' \u00b7 ' + prefix + money(p.rate) + ' / sq.ft.' : p.name) : '\u2014');
         item('House type', HOUSE[lv]);
         item('District', field('district').value);
         item('Town / area', field('town_area').value);
@@ -351,7 +418,7 @@
         if (lv >= 2) { item('First floor', fmt(t.f) + ' sq.ft.'); }
         if (lv >= 3) { item('Second floor', fmt(t.s) + ' sq.ft.'); }
         item('Total proposed area', fmt(t.total) + ' sq.ft.');
-        item('Indicative construction cost', p ? prefix + money(t.total * p.rate) : '\u2014', 'is-total is-wide');
+        item(cfg.publicRates ? 'Estimated construction cost' : 'Indicative construction cost', cfg.publicRates && p ? prefix + money(t.total * p.rate) : costText(), 'is-total is-wide');
         item('Name', field('name').value);
         item('Contact number', field('phone').value);
         item('Email', field('email').value || 'Not provided');
@@ -406,7 +473,7 @@
         var fd = new FormData();
         fd.append('package', state.pkg);
         fd.append('floors', lv);
-        ['district', 'town_area', 'design_status', 'approval_status', 'name', 'phone', 'email', 'land_ownership', 'start_date', 'comments', 'website'].forEach(function (n) {
+        ['district', 'town_area', 'design_status', 'approval_status', 'name', 'phone', 'email', 'land_ownership', 'start_date', 'comments', 'hp_extra'].forEach(function (n) {
             fd.append(n, field(n).value);
         });
         fd.append('consent', field('consent').checked ? '1' : '');
@@ -462,9 +529,9 @@
         bind('reference', json.reference);
         bind('doneCost', json.estimated_cost);
         var wa = q('#vhWhatsapp');
-        wa.href = json.whatsapp_url;
+        if (json.whatsapp_url) { wa.href = json.whatsapp_url; } else { wa.style.display = 'none'; }
         form.scrollTop = 0;
-        try { window.open(json.whatsapp_url, '_blank', 'noopener'); } catch (e) { /* popup blocked - button remains */ }
+        try { if (json.whatsapp_url) { window.open(json.whatsapp_url, '_blank', 'noopener'); } } catch (e) { /* popup blocked - button remains */ }
     }
 
     /* ---------------- print / save PDF ---------------- */

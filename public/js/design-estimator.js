@@ -52,9 +52,6 @@
         }
         return null;
     }
-    function rateLabel(p) {
-        return p.type === 'percent' ? plain(p.rate) + '% of construction estimate' : 'LKR ' + Number(p.rate).toLocaleString('en-US', { maximumFractionDigits: 2 }) + ' / sq.ft.';
-    }
     function showError(msg) {
         var e = q('#vdError');
         if (!msg) { e.hidden = true; e.textContent = ''; return; }
@@ -63,23 +60,90 @@
         e.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
 
-    /* ---------------- calculation (preview only - server recalculates) ---------------- */
+    /* ---------------- approximate ranges (rates stay on the server) ---------------- */
+    var quote = { seq: 0, timer: null, key: '', fee: '', construction: '' };
+
     function calc() {
         var p = pkgObj();
         var area = Math.max(0, parseFloat(field('area').value) || 0);
         var out = { p: p, area: area, construction: 0, fee: 0, basis: '' };
-        if (!p) { return out; }
-        out.construction = area * p.construction_rate;
-        if (area > 0) {
-            if (p.type === 'percent') {
-                out.fee = out.construction * p.rate / 100;
-                out.basis = plain(p.rate) + '% \u00d7 ' + money(out.construction);
-            } else {
-                out.fee = area * p.rate;
-                out.basis = fmt(area) + ' \u00d7 LKR ' + plain(p.rate);
+        if (cfg.publicRates && p) {
+            out.construction = area * p.construction_rate;
+            if (area > 0) {
+                if (p.type === 'percent') {
+                    out.fee = out.construction * p.rate / 100;
+                    out.basis = plain(p.rate) + '% \u00d7 ' + money(out.construction);
+                } else {
+                    out.fee = area * p.rate;
+                    out.basis = fmt(area) + ' \u00d7 LKR ' + plain(p.rate);
+                }
             }
         }
         return out;
+    }
+
+    function rateLabel(p) {
+        return p.type === 'percent' ? plain(p.rate) + '% of construction estimate' : 'LKR ' + Number(p.rate).toLocaleString('en-US', { maximumFractionDigits: 2 }) + ' / sq.ft.';
+    }
+
+    function setCost(fee, construction, note) {
+        bind('fee', fee);
+        bind('constEst', construction);
+        bind('basis', note || '');
+    }
+
+    function rangeNote(area, p) {
+        return 'Approximate range for ' + fmt(area) + ' sq.ft. \u2013 ' + (p ? p.name + ' package.' : '');
+    }
+
+    function feeText() {
+        if (!cfg.showEstimates) { return 'Detailed proposal from our team'; }
+        return quote.fee || 'Calculating\u2026';
+    }
+    function constText() {
+        if (!cfg.showEstimates) { return 'Not shown'; }
+        return quote.construction || 'Calculating\u2026';
+    }
+
+    function scheduleQuote(area, p) {
+        if (!cfg.showEstimates) {
+            quote.fee = quote.construction = '';
+            setCost('Quotation from our team', '\u2014', 'Your detailed proposal is prepared after our team reviews your requirements.');
+            return;
+        }
+        if (!(area > 0) || !p) {
+            quote.fee = quote.construction = ''; quote.key = '';
+            setCost('LKR 0', 'LKR 0', 'Enter your floor area to see the fee.');
+            return;
+        }
+
+        var key = p.slug + '|' + area;
+        if (quote.key === key && quote.fee) { setCost(quote.fee, quote.construction, rangeNote(area, p)); return; }
+
+        quote.key = key;
+        quote.fee = quote.construction = '';
+        setCost('Calculating\u2026', 'Calculating\u2026', rangeNote(area, p));
+        clearTimeout(quote.timer);
+        var seq = ++quote.seq;
+
+        quote.timer = setTimeout(function () {
+            fetch(cfg.quoteEndpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                body: JSON.stringify({ package: p.slug, area: area }),
+                credentials: 'same-origin'
+            }).then(function (r) { return r.json(); }).then(function (j) {
+                if (seq !== quote.seq) { return; }
+                if (j && j.ok && j.fee_range) {
+                    quote.fee = j.fee_range; quote.construction = j.construction_range;
+                    setCost(quote.fee, quote.construction, rangeNote(area, p));
+                } else {
+                    setCost('Estimate unavailable', '\u2014', 'Please continue \u2013 our team will send your proposal.');
+                }
+            }).catch(function () {
+                if (seq === quote.seq) { setCost('Estimate unavailable', '\u2014', 'Please continue \u2013 our team will send your proposal.'); }
+            });
+        }, 450);
     }
 
     function refresh() {
@@ -87,22 +151,28 @@
         var p = c.p;
         bind('area', fmt(c.area));
         bind('houseType', field('house_type').value);
-        bind('constEst', c.area > 0 ? money(c.construction) : 'LKR 0');
-        bind('fee', c.area > 0 ? money(c.fee) : 'LKR 0');
-        bind('basis', c.area > 0 ? c.basis : 'Enter your floor area to see the fee.');
 
         if (p) {
             bind('pkgName', p.name);
-            bind('pkgRate', rateLabel(p));
-            bind('constNote', 'Calculated using LKR ' + Math.round(p.construction_rate).toLocaleString('en-US') + ' per sq.ft. \u00d7 floor area.' +
-                (p.type === 'percent' ? ' The design fee is ' + plain(p.rate) + '% of this estimate.' : ''));
-            qa('[data-luxury-note]').forEach(function (n) { n.hidden = p.type !== 'percent'; });
+            bind('pkgRate', cfg.publicRates ? rateLabel(p) : (p.tagline || ''));
+            if (cfg.publicRates) {
+                bind('constNote', 'Calculated using LKR ' + Math.round(p.construction_rate).toLocaleString('en-US') + ' per sq.ft. \u00d7 floor area.' +
+                    (p.type === 'percent' ? ' The design fee is ' + plain(p.rate) + '% of this estimate.' : ''));
+                qa('[data-luxury-note]').forEach(function (n) { n.hidden = p.type !== 'percent'; });
+            }
             var list = q('[data-list="features"]');
             if (list) {
                 list.innerHTML = '';
                 (p.features || []).forEach(function (f) { list.appendChild(el('li', '', f)); });
             }
         }
+        if (cfg.publicRates) {
+            bind('constEst', c.area > 0 ? money(c.construction) : 'LKR 0');
+            bind('fee', c.area > 0 ? money(c.fee) : 'LKR 0');
+            bind('basis', c.area > 0 ? c.basis : 'Enter your floor area to see the fee.');
+            return;
+        }
+        scheduleQuote(c.area, p);
     }
 
     /* ---------------- package switch (steps 1 and 3) ---------------- */
@@ -120,7 +190,9 @@
                     refresh();
                 });
                 var s = el('span', '', p.name);
-                s.appendChild(el('small', '', p.type === 'percent' ? plain(p.rate) + '% of construction' : 'LKR ' + Math.round(p.rate).toLocaleString('en-US') + '/sq.ft.'));
+                if (cfg.publicRates) {
+                    s.appendChild(el('small', '', p.type === 'percent' ? plain(p.rate) + '% of construction' : 'LKR ' + Math.round(p.rate).toLocaleString('en-US') + '/sq.ft.'));
+                }
                 l.appendChild(i); l.appendChild(s);
                 box.appendChild(l);
             });
@@ -208,13 +280,14 @@
             box.appendChild(d);
         }
 
-        item('Package', p ? p.name + ' \u00b7 ' + rateLabel(p) : '\u2014');
-        item('Calculation basis', c.basis || '\u2014');
+        item('Package', p ? (cfg.publicRates ? p.name + ' \u00b7 ' + rateLabel(p) : p.name) : '\u2014');
+        if (cfg.publicRates) { item('Calculation basis', c.basis || '\u2014'); }
         item('Proposed floor area', fmt(c.area) + ' sq.ft.');
         item('House type', field('house_type').value);
         item('District', field('district').value || 'Not provided');
-        item('Estimated construction cost', money(c.construction) + ' (LKR ' + Math.round(p.construction_rate).toLocaleString('en-US') + '/sq.ft.)');
-        item('Indicative design fee', money(c.fee), 'is-total is-wide');
+        item(cfg.publicRates ? 'Estimated construction cost' : 'Approx. construction cost',
+            cfg.publicRates && p ? money(c.construction) + ' (LKR ' + Math.round(p.construction_rate).toLocaleString('en-US') + '/sq.ft.)' : constText());
+        item('Indicative design fee', cfg.publicRates ? money(c.fee) : feeText(), 'is-total is-wide');
         var add = selectedAddons().map(function (s) { return ADDON_NAMES[s] || s; });
         item('Optional add-ons', add.length ? add.join(', ') : 'None selected', 'is-wide');
         item('Name', field('name').value);
@@ -260,7 +333,7 @@
             start_date: field('start_date').value,
             comments: field('comments').value,
             consent: field('consent').checked,
-            website: field('website').value
+            hp_extra: field('hp_extra').value
         };
 
         state.busy = true;
@@ -306,9 +379,10 @@
         q('[data-bind="bar"]').style.width = '100%';
         bind('reference', json.reference);
         bind('doneFee', json.design_fee);
-        q('#vdWhatsapp').href = json.whatsapp_url;
+        var wa = q('#vdWhatsapp');
+        if (json.whatsapp_url) { wa.href = json.whatsapp_url; } else { wa.style.display = 'none'; }
         form.scrollTop = 0;
-        try { window.open(json.whatsapp_url, '_blank', 'noopener'); } catch (e) { /* popup blocked - button remains */ }
+        try { if (json.whatsapp_url) { window.open(json.whatsapp_url, '_blank', 'noopener'); } } catch (e) { /* popup blocked - button remains */ }
     }
 
     /* ---------------- navigation ---------------- */

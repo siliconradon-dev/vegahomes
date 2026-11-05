@@ -122,3 +122,7 @@
     .vd-switch { grid-template-columns: 1fr; }
     .vd-card__top, .vd-card__body { padding-left: 24px; padding-right: 24px; }
 }
+
+/* ---------- Card: no public rates ---------- */
+.vd-card__tier { display: flex; align-items: center; gap: 12px; padding-bottom: 16px; font-size: 16px; font-weight: 800; color: var(--vd-navy); }
+.vd-card__tier i { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; font-size: 16px; color: var(--vd-gold-d); background: #fbf0d4; }

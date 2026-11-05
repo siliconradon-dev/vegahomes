@@ -1,16 +1,19 @@
 {{-- ===== Our Packages + Dream Home Estimator popup ===== --}}
 @php
     $vegaPackages = $packages ?? \App\Models\Package::active()->get();
+    $showRates = (bool) config('vega.public_rates');
     $vegaConfig = [
-        'endpoint' => route('estimate.store'),
-        'packages' => $vegaPackages->map(function ($p) {
-            return [
-                'slug'     => $p->slug,
-                'name'     => $p->name,
-                'rate'     => $p->rate,
-                'starting' => (bool) $p->is_starting_rate,
-                'tagline'  => $p->tagline,
-            ];
+        'endpoint'      => route('estimate.store'),
+        'quoteEndpoint' => route('estimate.quote'),
+        'showEstimates' => \App\Support\EstimateRange::enabled(),
+        'publicRates'   => $showRates,
+        'packages'      => $vegaPackages->map(function ($p) use ($showRates) {
+            $row = ['slug' => $p->slug, 'name' => $p->name, 'tagline' => $p->tagline];
+            if ($showRates) {
+                $row['rate']     = $p->rate;
+                $row['starting'] = (bool) $p->is_starting_rate;
+            }
+            return $row;
         })->values()->all(),
     ];
 @endphp
@@ -57,12 +60,19 @@
                         <h3 class="vh-card__name">{{ $pkg->name }}</h3>
                         <p class="vh-card__tag">{{ $pkg->tagline }}</p>
 
-                        <div class="vh-card__price">
-                            @if ($pkg->is_starting_rate)<small>from</small>@endif
-                            <span class="vh-card__cur">LKR</span>
-                            <strong>{{ number_format($pkg->rate) }}</strong>
-                            <small>/ sq.ft.</small>
-                        </div>
+                        @if ($showRates)
+                            <div class="vh-card__price">
+                                @if ($pkg->is_starting_rate)<small>from</small>@endif
+                                <span class="vh-card__cur">LKR</span>
+                                <strong>{{ number_format($pkg->rate) }}</strong>
+                                <small>/ sq.ft.</small>
+                            </div>
+                        @else
+                            <div class="vh-card__tier">
+                                <i class="fa-solid fa-calculator"></i>
+                                <span>Instant indicative estimate</span>
+                            </div>
+                        @endif
 
                         @if (!empty($pkg->features))
                             <ul class="vh-card__list">
@@ -82,7 +92,7 @@
 
         <p class="vh-pk__foot">
             <i class="fa-solid fa-circle-info"></i>
-            Rates are indicative and in Sri Lankan Rupees. Final quotation depends on approved drawings, specifications and site conditions.
+            {{ $showRates ? 'Rates are indicative and in Sri Lankan Rupees. Final quotation depends on approved drawings, specifications and site conditions.' : 'Estimates are approximate ranges in Sri Lankan Rupees. Your final quotation depends on approved drawings, specifications and site conditions.' }}
         </p>
     </div>
 </section>
@@ -111,7 +121,7 @@
             </dl>
 
             <div class="vh-aside__total">
-                <span class="vh-aside__label">Indicative construction cost</span>
+                <span class="vh-aside__label">{{ $showRates ? 'Estimated construction cost' : 'Indicative construction cost' }}</span>
                 <strong data-bind="totalCost">LKR 0</strong>
                 <small data-bind="formula">Enter your room sizes to see the estimate.</small>
             </div>
@@ -135,7 +145,7 @@
 
             <form class="vh-body" id="vhForm" novalidate autocomplete="on">
                 {{-- honeypot --}}
-                <div class="vh-hp" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
+                <div class="vh-hp" aria-hidden="true"><input type="text" name="hp_extra" tabindex="-1" autocomplete="off" data-lpignore="true" data-form-type="other"></div>
 
                 {{-- STEP: config --}}
                 <section class="vh-step" data-step="config">
@@ -216,15 +226,14 @@
                     </div>
 
                     <div class="vh-estimate">
-                        <span>Estimated construction cost</span>
+                        <span>{{ $showRates ? 'Estimated construction cost' : 'Indicative construction cost' }}</span>
                         <strong data-bind="totalCost">LKR 0</strong>
                         <small data-bind="formula"></small>
                     </div>
 
                     <p class="vh-notice">
                         The total is calculated from the room dimensions you entered – please make sure every room and space is included.
-                        This is an indicative estimate, not a final quotation. Signature rates start from the stated figure; the final price may
-                        vary with approved drawings, specifications, site conditions, structural requirements, external works, taxes and confirmed scope.
+                        This is an indicative estimate, not a final quotation. {{ $showRates ? 'Signature rates start from the stated figure; the final price' : 'The final price' }} may vary with approved drawings, specifications, site conditions, structural requirements, external works, taxes and confirmed scope.
                     </p>
                 </section>
 
